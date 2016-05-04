@@ -12,15 +12,16 @@ returned to the server at the time completion.
   <input type="hidden" id="correct_ans" value=0>
   <input type="hidden" id="part_of_prob" value=0>
   <h2 id='problem'></h2><br>
-  <button id='start_test' onclick="startTest()">Start Timed Test</button>
+  <button id='start_test' onclick="startTest()">Start Timed Test</button><br><br>
+  <button id='send_all_data' onclick="sendAllData()">Done, Send Data to Server</button>
 </body>
 <script>
-var problems_results = [];
-function sendAnswers() {
+function sendAllData() {
   $.ajax({
-    url: '/sendAnswers/',
+    url: '/DataToServer/',
     type: 'GET',
-  })
+  });
+  $('#send_all_data').hide();
 };
 function nextNumber() {
   $.getJSON("/newNumbers/", function(data) {
@@ -38,16 +39,9 @@ function checkAnsGetNext() {
   var p1 = Number($('#part_of_prob').val());
   var ans = Number($('#correct_ans').val());
   var p2 = ans/p1;
-  if ($('#answer').val() === $('#correct_ans').val()) {
-    var correctness = true;
-  } else {
-    var correctness = false;
-  }
   // must use {} for key value pairs in js (or python)
-  var data = {'1st' : p1, '2nd' : p2, 'ans' : ans, 'correctness' : correctness};
+  var data = {'1st' : p1, '2nd' : p2, 'ans' : Number($('#answer').val()),};
   $('#answer').val("");
-  // if correct we can add a boolean to data
-  problems_results.push(data);
   console.log(data);
   $.ajax({
     url: '/receiveAnswers/',
@@ -60,10 +54,12 @@ function checkAnsGetNext() {
 };
 function startTest() {
   $('#start_test').hide();
+  $('#send_all_data').hide();
   nextNumber();
   $('#problem').after('<input type="text" id="answer">');
   $('#answer').after('<button id="next_prob" onclick="checkAnsGetNext()">Submit, Next Question</button>');
   window.setTimeout(function() {
+    $('#answer').val("");
     $.ajax({
       url: '/sendAnswers/',
       type: 'GET',

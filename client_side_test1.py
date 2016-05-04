@@ -6,7 +6,6 @@ import multiplication as m
 # holds starting and ending time of each problem
 # eventually move all timing to client side but this is easier for a prototype
 
-
 timing_session = []
 session_data = []
 m.initialize()
@@ -40,17 +39,19 @@ def receiveAnswers():
 # a file, the page is redirected back to test start from the client-side ***
 @app.route('/sendAnswers/')
 def sendAnswers():
-    # write info to file or to sql server
     # flash message test completed, results too eventually
+    # *** m.write_session_to_dataframe() ***
+    print session_data
+    del session_data[:]
     print 'sendAnswers pinged, writing data to file'
     return ('',204)
+# this function sends all of the aggregated session datas to the backend
+@app.route('/DataToServer/')
+def data_to_server():
+    print 'all session datas sent to server'
+    return ('',204)
+    # m.send_all()
 
 
 if __name__=='__main__':
     app.run(debug=True)
-
-
-
-
-
-
