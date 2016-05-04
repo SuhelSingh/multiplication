@@ -25,20 +25,25 @@ import time
 
 
 ############################## Initialize Values ################################
-numberlist = dict()
-problist = dict()
-history = [] #triple of (multiplication combo, time, corrent/incorrect )
-place = 0 
+#numberlist = dict()
+#problist = dict()
+#history = [] #triple of (multiplication combo, time, corrent/incorrect )
+#place = 0 
 
 
 ############################## Define global functions ################################
 def initialize(l1 = 10, h1 = 99, l2 = 1, h2 = 10):
-    global numberlist, problist
+    global numberlist, problist, place, history, data
+    numberlist = dict()
+    problist = dict()    
     #create probability and numberlist
     for r in range(l1,h1):
         for c in range(l2,h2):
             numberlist[ str(r) + ", " + str(c) ] = (r,c)
             problist[ str(r) + ", " + str(c) ] = 100.0
+    history = [] #triple of (multiplication combo, time, answer )
+    data = pd.DataFrame()
+    place = 0        
     normalize()
 
 def clearScreen():
@@ -75,18 +80,22 @@ def prompt(combination ):
     if not ( isinstance(answer, int) | isinstance(answer, float) ) :
         prompt(combination)
     time_ = time.time() - start_time
-    alist, blist =  numbersInvolved( (a,b) )
-    history.append(  ((a,b), time_, answer==a*b ,answer, alist, blist )  )
+    history.append(  {'n1':  a, 'n2': b,'answer': answer,'time': time_ }  )
+    
     
     
     ###### Penalties for getting something wrong
     ##### Penalties for getting something slowly
+
+
+##### UNEDITED
 def initialResponse( ):  
     global problist, history
     index = len(history)-1
-    a,b = history[index][0] ## input valules for 1) multiplicaiton numbers 
-    time = history[index][1] ## 2) time it took to answers
-    correct = history[index][2] ## 3) whether the answer was correct
+    a = history[index]['n1'] ## input valules for 1) multiplicaiton numbers 
+    b = history[index]['n2']
+    time = history[index]['time'] ## 2) time it took to answers
+    correct = history[index]['answer']==a*b ## 3) whether the answer was correct
 
     if not correct:
         problist[str(a) + ", " + str(b) ] = problist[ str(a) + ", " + str(b) ] + 0.2
@@ -102,6 +111,8 @@ def initialResponse( ):
         #print "Time: " + str(time)
         #print "Probability: " + str(problist[str(a) + ", " + str(b) ] )
 
+
+##### UNEDITED
 def summarizeStats():
     clearScreen()
     plt.hist( [x[1] for x in history[place:] ] )
@@ -130,7 +141,7 @@ def practice():
         string = raw_input("continue?")
         if string != "":
             navigate = "stop"
-    summarizeStats()
+    #summarizeStats()
         
         
 def timedTest(limit = 30):
@@ -141,7 +152,7 @@ def timedTest(limit = 30):
     while  time.time() - initialTime <= limit:
         prompt(selectNumbers()  ) #Finds numbers, 
         initialResponse() #updaes probabilities & responds to answer
-    summarizeStats()                           #stores statistics
+    #summarizeStats()                           #stores statistics
 
 def numberTest(n = 20):
     global initialtime, place
@@ -150,15 +161,17 @@ def numberTest(n = 20):
     for i in range(n):
         prompt(selectNumbers()  ) #Finds numbers, 
         initialResponse() #updaes probabilities & responds to answer
-    summarizeStats()                           #stores statistics
+    #summarizeStats()                           #stores statistics
 
 
 #########  
 #timedTest()
-  
 #practice()
   
 ############################## After Running the App ################################
+
+### Given a pair of numbers, this will tell you which single digit
+### multiplication and addition problems are involved in this problem
 def numbersInvolved( combination ):
     p,q = combination
     plist = [int(x) for x in str(p) ]

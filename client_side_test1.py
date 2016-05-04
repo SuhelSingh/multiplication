@@ -1,12 +1,16 @@
 from flask import Flask, render_template, make_response, request, url_for, redirect
-import requests
-import json
 import random
 import time
+import multiplication as m
+
 # holds starting and ending time of each problem
 # eventually move all timing to client side but this is easier for a prototype
+
+
 timing_session = []
 session_data = []
+m.initialize()
+
 # *** landing page to start test ***
 app = Flask(__name__)
 @app.route('/')
@@ -18,8 +22,7 @@ def test():
 def newNumbers():
     # want to flash message here, correct or incorrect
     timing_session.append(time.clock())
-    a = random.randint(1,10)
-    b = random.randint(11,99)
+    (a,b) = m.selectNumbers()
     response = make_response('{"1": %d, "2": %d}' % (a,b))
     response.headers['Content-Type'] = 'application/json'
     return response
