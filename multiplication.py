@@ -22,6 +22,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
+import os.path
 
 
 ############################## Initialize Values ################################
@@ -33,7 +34,7 @@ import time
 
 ############################## Define global functions ################################
 def initialize(l1 = 10, h1 = 99, l2 = 1, h2 = 10):
-    global numberlist, problist, place, history, data
+    global numberlist, problist, place, history, data, exerciseNum
     numberlist = dict()
     problist = dict()    
     #create probability and numberlist
@@ -42,9 +43,11 @@ def initialize(l1 = 10, h1 = 99, l2 = 1, h2 = 10):
             numberlist[ str(r) + ", " + str(c) ] = (r,c)
             problist[ str(r) + ", " + str(c) ] = 100.0
     history = [] #triple of (multiplication combo, time, answer )
-    data = pd.DataFrame()
-    place = 0        
+    data = pd.DataFrame() ## Dataframe to record and keep track of problems so we can collect data
+    place = 0 ## Used with the variable History to track which index was last used before an exercize
+    exerciseNum = 0 ## To keep track of how many exercises the user has completed
     normalize()
+    
 
 def clearScreen():
     print "\n"*45
@@ -130,8 +133,8 @@ def summarizeStats():
 ##### Ongoing loop ######
 def practice():    
     global initialtime, place    
-    initialize()
     navigate = ""
+    place = len(history)
     while navigate != "stop":
         clearScreen()
 
@@ -140,13 +143,13 @@ def practice():
         
         string = raw_input("continue?")
         if string != "":
+            exerciseData(history[place:])
             navigate = "stop"
     #summarizeStats()
         
         
 def timedTest(limit = 30):
     global initialtime, place
-    initialize()
     initialTime = time.time()
     place = len(history)
     while  time.time() - initialTime <= limit:
@@ -156,7 +159,6 @@ def timedTest(limit = 30):
 
 def numberTest(n = 20):
     global initialtime, place
-    initialize()
     place = len(history)
     for i in range(n):
         prompt(selectNumbers()  ) #Finds numbers, 
@@ -198,8 +200,40 @@ def dropVariables():
     del history, numberlist, place, problist
 
 
+############################## Modifying and Storing Data ################################
 
+def exerciseData( list1 ):
+    global exerciseNum, data 
+    if not isinstance(list1, list) :
+        print 'error'
+        return
+    exerciseData = pd.DataFrame(list1)
+    exerciseData['Exercise ID'] = exerciseNum
+    exerciseNum = exerciseNum + 1
+    if len(data) == 0:
+        data = exerciseData
+    else:
+        data = data.append(exerciseData).reset_index().drop('index', axis = 1, inplace=False)
 
-
+def exportSessionToNewFile(name = "storage"):
+    data['sessionID'] = 0
+    pd.DataFrame(data).to_csv(name)          
+    initialize()
+            
+def exportSessionToExistingFile(name = "storage"):
+    storedData = pd.read_csv('storage')
+    data['session'] = max(storedData['sessionID'])
+    storedData.append(data).reset_index().drop('index', axis = 1, inplace=False)
+    data.to_csv('storage', mode='a', header=False) 
+    initialize()
+    
+def exportData(name = 'storage'):
+    if os.path.exists(name):
+        exportSessionToExistingFile(name)
+        print 'exported to new file: ' + name 
+    else :
+        exportSessionToNewFile(name)
+        print 'exported to existing file: ' + name
+        
 #pd.DataFrame(history).to_csv("mstore1")
 
