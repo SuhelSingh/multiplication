@@ -1,0 +1,42 @@
+<html>
+<head>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+</head>
+<body>
+<h2></h2>
+<button id='start_timed_test' onclick="startTest()">Start Timed Test</button>
+<!-- use $getjson() to grab new problem from server, next iteration
+ will send back answer, recieve correct or incorrect message and next problem,
+ or can still check answer in server, record data for problem and will json
+ call to load next problem-->
+ </body>
+ <script>
+ function nextNumber() {
+   $.getJSON("/newNumbers/", function(data) {
+   console.log(data);
+   var items = [];
+   $.each(data, function(key,val) {
+     items.push(val);
+   });
+   $('h2').text(items[0]+' X '+items[1]+' =');
+   var ans = items[0]*items[1];
+   $('#answer').val(ans);
+ });
+ };
+ function startTest() {
+   $('#start_timed_test').hide();
+   $('#start_timed_test').after("<button id='next_number_button' onclick='nextNumber()'>Next Number</button>");
+   $('#next_number_button').after("<form><input type='text' id='answer_form'><br><button id='answer_button' onclick='checkAnswer()'>Submit</button><input type='hidden' id='answer' value='0'></form>");
+   nextNumber();
+ };
+ function checkAnswer() {
+   if ($('#answer_form').val() == $('#answer').val()) {
+     console.log('correct');
+   } else {
+     console.log('retard');
+   }
+   nextNumber();
+ };
+ </script>
+</html>

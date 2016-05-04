@@ -1,0 +1,75 @@
+<!-- this code will run the timed test, it accepts one arg, the time limit in
+second, it will continually grab new numbers, check the answer, and grab a new
+set, also tracking the time for each problem, then all this information will be
+returned to the server at the time completion.
+*** dont put () in js functions if they are being used as an argument ***-->
+<html>
+<head>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+</head>
+<body>
+  <input type="hidden" id="correct_ans" value=0>
+  <input type="hidden" id="part_of_prob" value=0>
+  <h2 id='problem'></h2><br>
+  <button id='start_test' onclick="startTest()">Start Timed Test</button>
+</body>
+<script>
+var problems_results = [];
+function sendAnswers() {
+  $.ajax({
+    url: '/sendAnswers/',
+    type: 'GET',
+  })
+};
+function nextNumber() {
+  $.getJSON("/newNumbers/", function(data) {
+  console.log(data);
+  var items = [];
+  $.each(data, function(key,val) {
+    items.push(val);
+  });
+  $('#problem').text(items[0]+' X '+items[1]+' =');
+  $('#correct_ans').val(items[0]*items[1]);
+  $('#part_of_prob').val(items[0]);
+});
+};
+function checkAnsGetNext() {
+  var p1 = Number($('#part_of_prob').val());
+  var ans = Number($('#correct_ans').val());
+  var p2 = ans/p1;
+  if ($('#answer').val() === $('#correct_ans').val()) {
+    var correctness = true;
+  } else {
+    var correctness = false;
+  }
+  // must use {} for key value pairs in js (or python)
+  var data = {'1st' : p1, '2nd' : p2, 'ans' : ans, 'correctness' : correctness};
+  $('#answer').val("");
+  // if correct we can add a boolean to data
+  problems_results.push(data);
+  console.log(data);
+  $.ajax({
+    url: '/receiveAnswers/',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    dataType: 'json'
+  });
+  nextNumber();
+};
+function startTest() {
+  $('#start_test').hide();
+  nextNumber();
+  $('#problem').after('<input type="text" id="answer">');
+  $('#answer').after('<button id="next_prob" onclick="checkAnsGetNext()">Submit, Next Question</button>');
+  window.setTimeout(function() {
+    $.ajax({
+      url: '/sendAnswers/',
+      type: 'GET',
+    });
+    window.location = '/';
+  },30000);
+};
+</script>
+</html>
