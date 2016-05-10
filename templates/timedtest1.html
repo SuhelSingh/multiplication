@@ -9,6 +9,7 @@ returned to the server at the time completion.
   </script>
 </head>
 <body>
+  <h3 id = "correctness"></h3>
   <input type="hidden" id="correct_ans" value=0>
   <input type="hidden" id="part_of_prob" value=0>
   <h2 id='problem'></h2><br>
@@ -17,6 +18,7 @@ returned to the server at the time completion.
 </body>
 <script>
 function sendAllData() {
+  $('#correctness').text("");
   $.ajax({
     url: '/DataToServer/',
     type: 'GET',
@@ -41,6 +43,11 @@ function checkAnsGetNext() {
   var p2 = ans/p1;
   // must use {} for key value pairs in js (or python)
   var data = {'1st' : p1, '2nd' : p2, 'ans' : Number($('#answer').val()),};
+  if (ans == $('#answer').val()) {
+    $('#correctness').text("CORRECT!");
+  } else {
+    $('#correctness').text("Incorrect");
+  }
   $('#answer').val("");
   console.log(data);
   $.ajax({
@@ -56,8 +63,8 @@ function startTest() {
   $('#start_test').hide();
   $('#send_all_data').hide();
   nextNumber();
-  $('#problem').after('<input type="text" id="answer">');
-  $('#answer').after('<button id="next_prob" onclick="checkAnsGetNext()">Submit, Next Question</button>');
+  $('#problem').after('<form action="javascript:void(0);" onsubmit="checkAnsGetNext()"><input id = "answer" type="text"><input type="submit"></form>');
+  //$('#answer').after('<button id="next_prob" onclick="checkAnsGetNext()">Submit, Next Question</button>');
   window.setTimeout(function() {
     $('#answer').val("");
     $.ajax({

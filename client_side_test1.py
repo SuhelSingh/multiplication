@@ -24,6 +24,7 @@ def newNumbers():
     (a,b) = m.selectNumbers()
     response = make_response('{"1": %d, "2": %d}' % (a,b))
     response.headers['Content-Type'] = 'application/json'
+    print 'sent new numbers'
     return response
 # *** subtracts current time from start time, recieves problem attempted and
 # whether or not it was correct, adds time to this, adds this dict to session_data
@@ -34,6 +35,7 @@ def receiveAnswers():
     data = request.json
     data['time'] = timer
     session_data.append(data)
+    print 'recieved answers'
     return ('',204)
 # *** after timer in client exits test, this is pinged to write session_data to
 # a file, the page is redirected back to test start from the client-side ***
