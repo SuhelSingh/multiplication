@@ -1,29 +1,28 @@
-<!-- this code will run the timed test, it accepts one arg, the time limit in
-second, it will continually grab new numbers, check the answer, and grab a new
-set, also tracking the time for each problem, then all this information will be
-returned to the server at the time completion.
-*** dont put () in js functions if they are being used as an argument ***-->
 <html>
 <head>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-  </script>
+</script>
 </head>
 <body>
   <h3 id = "correctness"></h3>
   <input type="hidden" id="correct_ans" value=0>
   <input type="hidden" id="part_of_prob" value=0>
   <h2 id='problem'></h2><br>
-  <button id='start_test' onclick="startTest()">Start Timed Test</button><br><br>
-  <button id='send_all_data' onclick="sendAllData()">Done, Send Data to Server</button>
+  <button id='start_test' onclick="startTest()">Start Practice</button>
 </body>
 <script>
 function sendAllData() {
   $('#correctness').text("");
   $.ajax({
+    url: '/sendAnswers/',
+    type: 'GET',
+  });
+  $.ajax({
     url: '/DataToServer/',
     type: 'GET',
   });
-  $('#send_all_data').hide();
+  $('#end_practice').hide();
+  window.location = '/practice/';
 };
 function nextNumber() {
   $.getJSON("/newNumbers/", function(data) {
@@ -61,17 +60,9 @@ function checkAnsGetNext() {
 };
 function startTest() {
   $('#start_test').hide();
-  $('#send_all_data').hide();
+  $('#start_test').after('<button id="end_practice" onclick="sendAllData()">End Practice</button>')
   nextNumber();
   $('#problem').after('<form action="javascript:void(0);" onsubmit="checkAnsGetNext()"><input id = "answer" type="text"><input type="submit"></form>');
-  window.setTimeout(function() {
-    $('#answer').val("");
-    $.ajax({
-      url: '/sendAnswers/',
-      type: 'GET',
-    });
-    window.location = '/timedTest/';
-  },30000);
 };
 </script>
 </html>
