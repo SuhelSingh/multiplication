@@ -1,14 +1,23 @@
 <html>
 <head>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-</script>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <h1>Welcome to Suhel and Chris's Multiplication Training App!</h1>
-  <h3>(Alpha Version)</h3><br>
-  <p>Information Section or "How it Works" link</p><br>
-  <p>link to email update sign up or account creation</p><br>
-  <a href = "/timedTest/">Take Timed Test</a><br>
-  <a href = "/practice/">Enter Practice Mode</a>
+  <p>(Alpha Version)</p><br>
+  <div class="container">
+    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">How It Works</button>
+    <div id="demo" class="collapse">
+      Using proprietary machine learning analysis, this application will train you to multiply and divide numbers
+      faster than ever before. As you use this application, it will learn what you are good at and what
+      you need to improve on, providing you with the most efficient way to improve your mental math skills.
+    </div>
+  </div>
+  <br>
+  <a href = "/timedTest/" class="btn btn-primary btn-block">Take Timed Test</a><br>
+  <a href = "/practice/" class="btn btn-primary btn-block">Enter Practice Mode</a>
 </body>
 </html>

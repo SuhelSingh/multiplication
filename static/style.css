@@ -1,0 +1,93 @@
+body {
+  background-color: lightblue;
+  margin: auto;
+  width: 60%;
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+
+h1 {
+  text-align: center;
+  margin: auto;
+  width: 70%;
+  padding: 10px;
+}
+
+p {
+  text-align: center;
+}
+
+.container {
+  text-align: center;
+  margin: auto;
+  width: 70%;
+  padding: 10px;
+}
+
+.button1 {
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    border-radius: 12px;
+    margin:0 auto;
+}
+
+.submittimed {
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    border-radius: 12px;
+}
+
+.submitpractice {
+  background-color: #ff9900;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  border-radius: 12px;
+}
+
+.button2 {
+    background-color: #ff9900;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    border-radius: 12px;
+    margin:0 auto;
+}
+
+.inproblem {
+  text-align: center;
+}
+
+input[type=text] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.inputtimed:focus {
+    border: 3px solid #008CBA;
+}
+
+.inputpractice:focus {
+    border: 3px solid #ff9900;
+}

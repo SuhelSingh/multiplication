@@ -5,16 +5,18 @@ returned to the server at the time completion.
 *** dont put () in js functions if they are being used as an argument ***-->
 <html>
 <head>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-  </script>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h3 id = "correctness"></h3>
+  <h3 class="inproblem" id = "correctness"></h3>
   <input type="hidden" id="correct_ans" value=0>
   <input type="hidden" id="part_of_prob" value=0>
-  <h2 id='problem'></h2><br>
-  <button id='start_test' onclick="startTest()">Start Timed Test</button><br><br>
-  <button id='send_all_data' onclick="sendAllData()">Done, Send Data to Server</button>
+  <h2 class="inproblem" id='problem'></h2><br>
+  <button class="button1" id='start_test' onclick="startTest()">Start Timed Test</button><br><br>
+  <button class="button1" id='send_all_data' onclick="sendAllData()">Done, Send Data to Server</button>
 </body>
 <script>
 function sendAllData() {
@@ -63,7 +65,7 @@ function startTest() {
   $('#start_test').hide();
   $('#send_all_data').hide();
   nextNumber();
-  $('#problem').after('<form action="javascript:void(0);" onsubmit="checkAnsGetNext()"><input id = "answer" type="text"><input type="submit"></form>');
+  $('#problem').after('<form action="javascript:void(0);" class="inproblem" onsubmit="checkAnsGetNext()"><input class="inputtimed" id = "answer" type="text"><input class="submittimed" type="submit"></form>');
   window.setTimeout(function() {
     $('#answer').val("");
     $.ajax({
